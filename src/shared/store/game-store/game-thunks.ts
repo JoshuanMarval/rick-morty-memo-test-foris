@@ -1,7 +1,8 @@
-import { AppThunk } from "../store-types";
-import { Card } from "../../entities/card";
+import {AppThunk} from "../store-types";
+import {Card} from "../../entities/card";
 import {findAllCharacters} from '../../../pages/game-page/domain/usecases/find-all-characters';
-import {resetGame, setBoard, setEnabledPlayer, setFinishGame, setMoves, setScore, shuffleCards} from "./game-reducer";
+import {resetGame, setBoard, setEnabledPlayer, setFinishGame, shuffleCards} from "./game-reducer";
+import {setFlippedCardInBoard, setIfMatch, setIfNotMatch} from "./board-setters";
 
 const LIMIT_SCORE = 6
 let cardsRepository: Card[] = []
@@ -9,6 +10,8 @@ let cardsRepository: Card[] = []
 export const fetchCharactersAction = (): AppThunk => {
    return async (dispatch, getState) => {
       const {isGameFinished} = getState().game
+      
+      let doubledCards: Card[] = []
       dispatch(resetGame())
   
       if (cardsRepository.length > 0) {
@@ -18,8 +21,6 @@ export const fetchCharactersAction = (): AppThunk => {
          }
          return
       }
-      
-      let doubledCards: Card[] = []
       
       findAllCharacters
          .run()
@@ -42,8 +43,8 @@ export const playGameAction = (): AppThunk => {
       dispatch(shuffleCards())
       setTimeout(() => {
          const {cards} = getState().game
-         let flippedCard = cards.map((character) => ({ ...character, isFlipped: true, isMatched: false }))
-         dispatch(setBoard(flippedCard))
+         let shuffledFlippedCards = cards.map((character) => ({ ...character, isFlipped: true, isMatched: false }))
+         dispatch(setBoard(shuffledFlippedCards))
          dispatch(setEnabledPlayer(true))
       },3000)
    }
@@ -53,42 +54,21 @@ export const setSelectedCardAction = (card:Card): AppThunk => {
    return async (dispatch, getState) => {
       const {cards, score} = getState().game
       let boardCopy = [...cards]
-      boardCopy.splice(card.position ?? 0, 1, card)
-      dispatch(setBoard(boardCopy))
-   
-      const flippedCards = boardCopy.filter((card) => card.isFlipped === false)
+      
+      const flippedCards = setFlippedCardInBoard(boardCopy, card, dispatch)
    
       if (flippedCards.length === 2) {
          dispatch(setEnabledPlayer(false))
          if (flippedCards[0].name === flippedCards[1].name) {
-            const boardMatchedCards = boardCopy.map((card) => {
-               if (!card.isFlipped) return { ...card, isMatched: true, isFlipped: true }
-               return card
-            })
-            
-            setTimeout(() => {
-               dispatch(setBoard(boardMatchedCards))
-               dispatch(setMoves())
-               dispatch(setScore())
-               dispatch(setEnabledPlayer(true))
-            },1000)
+            setIfMatch(boardCopy, flippedCards, dispatch)
             
             if (score === LIMIT_SCORE -1) {
                setTimeout(() => {
                   dispatch(setFinishGame(true))
                }, 2000)
             }
-          
          } else {
-            const boardMatchedCards = boardCopy.map((card) => {
-               if (!card.isFlipped) return { ...card, isFlipped: true }
-               return card
-            })
-            setTimeout(() => {
-               dispatch(setBoard(boardMatchedCards))
-               dispatch(setMoves())
-               dispatch(setEnabledPlayer(true))
-            },1000)
+            setIfNotMatch(boardCopy, flippedCards, dispatch)
          }
       }
    }

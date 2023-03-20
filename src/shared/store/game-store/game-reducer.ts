@@ -44,7 +44,7 @@ const gameSlice = createSlice({
          return {...state, isGameFinished: action.payload}
       },
       resetGame() {
-         return {...initialState}
+         return initialState
       }
    }
 })
