@@ -1,0 +1,22 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+
+.game-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  margin-top: 2em;
+  padding: 0 50px;
+  height: 630px;
+  width: 500px;
+  background-color: #FFFAC2;
+  border-radius: 15px;
+}

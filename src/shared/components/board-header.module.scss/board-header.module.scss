@@ -1,0 +1,15 @@
+.boardHeader {
+   &Container {
+      width: 100%;
+      height: 25px;
+      padding: 10px;
+      color: black;
+      font-weight: bold;
+      text-align: justify;
+   }
+   
+   &Scores {
+      display: flex;
+      justify-content: space-between;
+   }
+}

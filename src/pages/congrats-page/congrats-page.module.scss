@@ -1,0 +1,23 @@
+.container {
+   padding-top: 2em;
+   color: black;
+   
+   &Results {
+      position: relative;
+      top: -250px;
+      width: 350px;
+      text-align: justify;
+      
+      &Congrats {
+         font-size: 26px;
+         color: #233A59;
+         margin-bottom: .3em;
+      }
+      
+      &Buttons {
+         margin-top: 2em;
+         display: flex;
+         gap: 2em;
+      }
+   }
+}

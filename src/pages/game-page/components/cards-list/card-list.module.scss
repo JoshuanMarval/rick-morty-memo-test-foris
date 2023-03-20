@@ -1,0 +1,78 @@
+.cardsList {
+   height: 510px;
+   display: grid;
+   grid-template-columns: repeat(4, min-content);
+   grid-template-rows: repeat(3, min-content);
+   gap: 10px;
+}
+
+.card {
+   padding: 10px;
+   width: 100px;
+   height: 133px;
+   background-color: white;
+   white-space: pre;
+   transition: transform 1s;
+   transform-style: preserve-3d;
+   border-radius: 6px;
+   box-shadow:  2px 1px 4px #c7c7c7;
+   
+   &Container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+   
+      &Flip > .card {
+         cursor: pointer;
+         transform: rotateY(180deg);
+      }
+   }
+   
+   &Front {
+      position: absolute;
+      width: 100px;
+      height: 100%;
+      backface-visibility: hidden;
+   }
+   
+   &Back {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 6px;
+      backface-visibility: hidden;
+      background-color: #A2F2F9;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      transform: rotateY(180deg);
+   }
+   
+   &Image {
+      width: 100%;
+      border-radius: 6px;
+   }
+   
+   &Name {
+      color: #233A59;
+      font-size: 10px;
+      text-align: left;
+      overflow: hidden;
+   }
+   
+   &Desc {
+      display: flex;
+      column-gap: 2px;
+      color: black;
+      font-size: 8px;
+   }
+    &Matched {
+       transition: transform .5s;
+       transform: scale(0);
+    }
+   
+   &Pointer {
+      cursor: pointer;
+   }
+}
